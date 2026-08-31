@@ -1,6 +1,6 @@
 # CampusGuide
 
-Run locally:
+Run locally
 
 ```bash
 npm install
