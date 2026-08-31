@@ -1,0 +1,33 @@
+equipment_id,equipment_name,category,quantity,location,resource_id
+E001,Arduino Kit,Electronics,20,IoT Innovation Lab,R002
+E002,Raspberry Pi,Computing,15,IoT Innovation Lab,R002
+E003,ESP32 Development Board,Electronics,18,IoT Innovation Lab,R002
+E004,Sensor Kit,Electronics,20,IoT Innovation Lab,R002
+E005,GPU Workstation,Computing,10,AI & Machine Learning Lab,R001
+E006,Jupyter Workstation,Computing,30,AI & Machine Learning Lab,R001
+E007,Arduino Kit,Electronics,12,Robotics Lab,R007
+E008,Robotics Kit,Robotics,10,Robotics Lab,R007
+E009,Oscilloscope,Electronics,8,Electronics Lab,R004
+E010,Multimeter,Electronics,15,Electronics Lab,R004
+E011,Soldering Station,Electronics,10,Electronics Lab,R004
+E012,3D Printer,Fabrication,3,Innovation & Prototyping Lab,R008
+E013,Laser Cutter,Fabrication,1,Innovation & Prototyping Lab,R008
+E014,3D Printer,Fabrication,4,3D Fabrication Studio,R021
+E015,Laser Cutter,Fabrication,1,3D Fabrication Studio,R021
+E016,CAD Workstation,Computing,8,3D Fabrication Studio,R021
+E017,Kali Linux Workstation,Cybersecurity,20,Cybersecurity Lab,R009
+E018,Wireshark Workstation,Cybersecurity,20,Cybersecurity Lab,R009
+E019,Docker Workstation,Computing,25,Cloud Computing Lab,R010
+E020,Camera,Media,4,Digital Media Studio,R020
+E021,Microphone,Media,8,Digital Media Studio,R020
+E022,Green Screen,Media,1,Digital Media Studio,R020
+E023,Projector,Presentation,10,Seminar Room A,R011
+E024,Projector,Presentation,10,Seminar Room B,R012
+E025,Smart Board,Presentation,1,Smart Classroom A,R013
+E026,Video Conferencing System,Communication,1,Research Collaboration Room,R022
+E027,Display Monitor,Presentation,2,Project Workspace A,R023
+E028,Display Monitor,Presentation,2,Project Workspace B,R024
+E029,Video Conferencing System,Communication,1,AI Research Seminar Room,R025
+E030,Projector,Presentation,1,Project Room 1,R015
+E031,Monitor,Presentation,2,Project Room 2,R016
+E032,Whiteboard,Presentation,1,Discussion Room 1,R017

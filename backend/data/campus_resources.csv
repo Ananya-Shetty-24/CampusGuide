@@ -1,0 +1,26 @@
+resource_id,resource_name,resource_type,building,floor,capacity,equipment
+R001,AI & Machine Learning Lab,Laboratory,Block A,2,60,Python;GPU;Jupyter;Linux
+R002,IoT Innovation Lab,Laboratory,Block B,1,40,Arduino;Raspberry Pi;ESP32;Sensors
+R003,Data Science Lab,Laboratory,Block A,3,50,Python;R;Jupyter;SQL
+R004,Electronics Lab,Laboratory,Block C,1,35,Arduino;Oscilloscope;Multimeter;Soldering Station
+R005,Computer Programming Lab 1,Laboratory,Block A,1,50,Python;Java;C++;Linux
+R006,Computer Programming Lab 2,Laboratory,Block A,2,45,Python;Java;C++;Linux
+R007,Robotics Lab,Laboratory,Block B,2,30,Arduino;Raspberry Pi;Robotics Kit;Sensors
+R008,Innovation & Prototyping Lab,Laboratory,Block C,2,25,3D Printer;Arduino;Laser Cutter;Soldering Station
+R009,Cybersecurity Lab,Laboratory,Block D,2,40,Linux;Kali Linux;Wireshark;Python
+R010,Cloud Computing Lab,Laboratory,Block D,3,45,Linux;Docker;Python;Cloud Workstations
+R011,Seminar Room A,Classroom,Block D,1,80,Projector;Whiteboard;Audio System
+R012,Seminar Room B,Classroom,Block D,2,60,Projector;Whiteboard;Audio System
+R013,Smart Classroom A,Classroom,Block A,1,50,Projector;Smart Board;Whiteboard
+R014,Smart Classroom B,Classroom,Block B,3,45,Projector;Smart Board;Whiteboard
+R015,Project Room 1,Study Room,Library,1,8,Projector;Whiteboard;Power Outlets
+R016,Project Room 2,Study Room,Library,1,10,Monitor;Whiteboard;Power Outlets
+R017,Discussion Room 1,Study Room,Library,2,6,Whiteboard;Power Outlets
+R018,Discussion Room 2,Study Room,Library,2,6,Whiteboard;Power Outlets
+R019,Group Study Hall,Study Space,Library,2,20,Projector;Whiteboard;Power Outlets
+R020,Digital Media Studio,Special Facility,Block C,3,20,Camera;Microphones;Green Screen;Editing PC
+R021,3D Fabrication Studio,Special Facility,Block C,1,15,3D Printer;Laser Cutter;CAD Workstation
+R022,Research Collaboration Room,Study Room,Research Block,1,12,Display;Whiteboard;Video Conferencing
+R023,Project Workspace A,Study Space,Innovation Center,1,15,Monitor;Whiteboard;Power Outlets
+R024,Project Workspace B,Study Space,Innovation Center,1,12,Monitor;Whiteboard;Power Outlets
+R025,AI Research Seminar Room,Classroom,Research Block,2,30,Projector;Display;Video Conferencing
