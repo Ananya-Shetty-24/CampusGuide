@@ -2,6 +2,8 @@
 
 CampusGuide is a full-stack web app that helps students and staff find, browse, and book campus resources — rooms, labs, equipment, and facilities — from a single dashboard. It includes user authentication, a live booking system, campus-wide search, and an AI assistant ("Genie") for natural-language queries about available spaces and equipment.
 
+Live Link:https://campus-guide-alpha.vercel.app/
+
 ## Features
 
 - **Resource discovery** — Browse and search rooms, labs, and equipment across campus buildings, with details like capacity, floor, and attached equipment.
