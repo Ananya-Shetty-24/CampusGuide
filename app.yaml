@@ -1,5 +1,4 @@
 command:
-  - "npm"
-  - "--prefix"
-  - "backend"
-  - "start"
+  - "sh"
+  - "-c"
+  - "npm --prefix backend install && npm --prefix backend start"
