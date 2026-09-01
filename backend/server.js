@@ -2,11 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import 'dotenv/config';
 import searchRoutes from './routes/search.js';
 import resourceRoutes from './routes/resources.js';
 import bookingRoutes from './routes/bookings.js';
 import { loadData } from './data/dataLoader.js';
 import { initBookings } from './services/bookingService.js';
+import genieRoutes from './routes/genie.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,6 +22,7 @@ app.use(express.json());
 app.use('/api', searchRoutes);
 app.use('/api', resourceRoutes);
 app.use('/api', bookingRoutes);
+app.use('/api', genieRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

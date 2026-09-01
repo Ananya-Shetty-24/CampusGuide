@@ -4,5 +4,5 @@ command:
   - "npm --prefix backend install && npm --prefix backend start"
 
 env:
-  - name: GENIE_SPACE_ID
+  - name: app-1gdu4k campusguide
     valueFrom: genie-space

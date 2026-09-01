@@ -335,6 +335,7 @@ export default function Dashboard() {
   const [genieInput, setGenieInput] = useState("");
   const [genieMessages, setGenieMessages] = useState([]);
   const [genieLoading, setGenieLoading] = useState(false);
+  const [genieConversationId, setGenieConversationId] = useState(null);
   const genieInputRef = useRef(null);
 
   function openGenie() {
@@ -357,20 +358,56 @@ export default function Dashboard() {
     setGenieLoading(true);
 
     try {
-      const res = await fetch(
-        `${API_BASE}/search?q=${encodeURIComponent(q)}&limit=3`
-      );
-      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+      const res = await fetch(`${API_BASE}/genie`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: q,
+          conversationId: genieConversationId,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Request failed (${res.status})`);
+      }
+
       const data = await res.json();
-      const results = data.results || [];
+      console.log("Genie response data:", JSON.stringify(data, null, 2));
+
+      const messages = data.messages || [];
+      const conversationId = data.conversation_id || data.conversation?.id;
+      if (conversationId) {
+        setGenieConversationId(conversationId);
+      }
+
+      let replyText = "I'm not sure how to respond to that.";
+      let results = [];
+
+      const completedMsg = messages.find((m) => m.status === "COMPLETED" && (m.content || (m.attachments && m.attachments.length > 0)));
+      if (completedMsg) {
+        replyText = completedMsg.content || replyText;
+
+        if (completedMsg.attachments && completedMsg.attachments.length > 0) {
+          for (const att of completedMsg.attachments) {
+            if (att.text?.content) {
+              replyText = att.text.content;
+            }
+            if (att.suggested_questions) {
+              // Skip suggested questions in results
+            }
+          }
+        }
+      } else if (messages.length > 0) {
+        const lastMsg = messages[messages.length - 1];
+        replyText = lastMsg.content || lastMsg.status || replyText;
+      }
+
       setGenieMessages((prev) => [
         ...prev,
         {
           role: "genie",
-          text:
-            results.length > 0
-              ? `Found ${results.length} match${results.length === 1 ? "" : "es"}:`
-              : "No matches for that. Try different wording.",
+          text: replyText,
           results,
         },
       ]);
@@ -379,7 +416,7 @@ export default function Dashboard() {
         ...prev,
         {
           role: "genie",
-          text: "Couldn't reach the backend. Make sure it's running on http://localhost:3001.",
+          text: err.message || "Couldn't reach the backend. Make sure it's running on http://localhost:3001.",
           results: [],
         },
       ]);
