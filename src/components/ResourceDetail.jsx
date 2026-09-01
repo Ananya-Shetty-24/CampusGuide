@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft, MapPin, Users, Wifi, WifiOff,
-  ChevronLeft, ChevronRight, X, Check, Search
+  ChevronLeft, ChevronRight, X, Check, Search, Calendar,
+  LayoutDashboard, Compass
 } from "lucide-react";
 import {
   getResourceById,
@@ -430,10 +431,18 @@ function ResourceDetail() {
 }
 
 function Header() {
+  const navigate = useNavigate();
+
+  const navLinks = [
+    { label: "Dashboard", icon: LayoutDashboard, onClick: () => navigate("/dashboard") },
+    { label: "Explore Campus", icon: Compass, onClick: () => navigate("/") },
+    { label: "Bookings", icon: Calendar, onClick: () => navigate("/bookings") },
+  ];
+
   return (
     <header className="bg-black text-white border-b border-transparent">
-      <div className="max-w-5xl mx-auto px-6 md:px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5">
+      <div className="max-w-5xl mx-auto px-6 md:px-8 h-16 flex items-center justify-between gap-6">
+        <Link to="/" className="flex items-center gap-2.5 shrink-0">
           <div className="w-7 h-7 rounded-md bg-red-500 flex items-center justify-center">
             <Search className="w-4 h-4 text-black" />
           </div>
@@ -441,7 +450,21 @@ function Header() {
             CampusGuide
           </span>
         </Link>
-        <div className="flex items-center gap-3">
+
+        <nav className="hidden sm:flex items-center gap-1 flex-1">
+          {navLinks.map(({ label, icon: Icon, onClick }) => (
+            <button
+              key={label}
+              onClick={onClick}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[13.5px] font-medium text-white/60 hover:text-white hover:bg-white/5 transition-colors"
+            >
+              <Icon className="w-3.5 h-3.5" />
+              {label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3 shrink-0">
           <Link to="/login" className="text-[13.5px] font-medium text-white/70 hover:text-white transition-colors">
             Sign in
           </Link>

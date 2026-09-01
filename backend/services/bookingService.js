@@ -108,6 +108,10 @@ export function getBookingsByResourceId(resourceId) {
   return bookings.filter(b => b.resource_id === resourceId && b.status === 'Confirmed');
 }
 
+export function getAllBookings() {
+  return bookings.filter(b => b.status === 'Confirmed');
+}
+
 export function getBookingById(bookingId) {
   return bookings.find(b => b.booking_id === bookingId) || null;
 }

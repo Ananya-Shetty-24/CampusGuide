@@ -87,6 +87,17 @@ export async function createBooking(resourceId, availabilityId) {
   return data;
 }
 
+export async function getAllBookings() {
+  const response = await fetch(`${API_BASE_URL}/bookings`);
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to fetch bookings');
+  }
+  
+  return response.json();
+}
+
 export function connectStatusStream(resourceId, onStatusChange) {
   const eventSource = new EventSource(
     `${API_BASE_URL}/resources/${resourceId}/status/stream`

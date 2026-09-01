@@ -2,11 +2,31 @@ import { Router } from 'express';
 import {
   createBooking,
   getBookingsByResourceId,
-  getBookingById
+  getBookingById,
+  getAllBookings
 } from '../services/bookingService.js';
 import { getResourceById } from '../data/dataLoader.js';
 
 const router = Router();
+
+router.get('/bookings', (req, res) => {
+  try {
+    const bookings = getAllBookings();
+    const enriched = bookings.map(b => {
+      const resource = getResourceById(b.resource_id);
+      return {
+        ...b,
+        resource_name: resource?.resource_name || 'Unknown',
+        building: resource?.building || '',
+        resource_type: resource?.resource_type || ''
+      };
+    });
+    res.json({ bookings: enriched });
+  } catch (error) {
+    console.error('All bookings error:', error);
+    res.status(500).json({ error: 'Unable to fetch bookings.' });
+  }
+});
 
 router.post('/resources/:resourceId/bookings', (req, res) => {
   try {

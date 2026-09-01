@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import CampusGuide from "./CampusGuide.jsx";
 import Dashboard from "./Dashboard.jsx";
+import Bookings from "./Bookings.jsx";
 import ResourceDetail from "./components/ResourceDetail.jsx";
 import Login from "./Login.jsx";
 import SignUp from "./SignUp.jsx";
@@ -14,6 +15,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<CampusGuide />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/bookings" element={<Bookings />} />
       <Route path="/resources/:resourceId" element={<ResourceDetail />} />
       <Route
         path="/login"

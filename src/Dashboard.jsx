@@ -496,6 +496,12 @@ export default function Dashboard() {
       onClick: () => navigate("/"),
     },
     {
+      label: "Bookings",
+      icon: Calendar,
+      active: false,
+      onClick: () => navigate("/bookings"),
+    },
+    {
       label: "Report",
       icon: Flag,
       active: false,
