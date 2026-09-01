@@ -2,3 +2,7 @@ command:
   - "sh"
   - "-c"
   - "npm --prefix backend install && npm --prefix backend start"
+
+env:
+  - name: GENIE_SPACE_ID
+    valueFrom: genie-space
