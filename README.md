@@ -4,6 +4,9 @@ CampusGuide is a full-stack web app that helps students and staff find, browse, 
 
 Live Link:https://campus-guide-alpha.vercel.app/
 
+<img width="1897" height="890" alt="image" src="https://github.com/user-attachments/assets/54292a48-e27f-4b97-b354-437f4502bb40" />
+
+
 ## Features
 
 - **Resource discovery** — Browse and search rooms, labs, and equipment across campus buildings, with details like capacity, floor, and attached equipment.
