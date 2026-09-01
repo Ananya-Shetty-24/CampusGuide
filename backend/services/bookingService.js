@@ -116,6 +116,26 @@ export function getBookingById(bookingId) {
   return bookings.find(b => b.booking_id === bookingId) || null;
 }
 
+export function cancelBooking(bookingId) {
+  const booking = bookings.find(b => b.booking_id === bookingId);
+  if (!booking) {
+    return { error: 'not_found', message: 'Booking not found.' };
+  }
+  if (booking.status === 'Cancelled') {
+    return { error: 'already_cancelled', message: 'Booking is already cancelled.' };
+  }
+
+  const now = new Date();
+  const bookingDate = new Date(booking.date + 'T' + booking.start_time + ':00');
+  if (bookingDate <= now) {
+    return { error: 'past', message: 'Cannot cancel a booking that has already started.' };
+  }
+
+  booking.status = 'Cancelled';
+  saveBookings();
+  return { success: true, booking };
+}
+
 export function isSlotBooked(availabilityId) {
   return findBookingByAvailability(availabilityId) !== null;
 }

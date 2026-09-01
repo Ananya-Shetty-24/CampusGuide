@@ -17,8 +17,48 @@
       "date": "2026-09-01",
       "start_time": "14:00",
       "end_time": "16:00",
-      "status": "Confirmed",
+      "status": "Cancelled",
       "created_at": "2026-09-01T06:50:25.462Z"
+    },
+    {
+      "booking_id": "B000003",
+      "resource_id": "R001",
+      "availability_id": "A0001",
+      "date": "2026-09-01",
+      "start_time": "09:00",
+      "end_time": "11:00",
+      "status": "Confirmed",
+      "created_at": "2026-09-01T07:25:13.780Z"
+    },
+    {
+      "booking_id": "B000004",
+      "resource_id": "R012",
+      "availability_id": "A0045",
+      "date": "2026-09-01",
+      "start_time": "09:00",
+      "end_time": "11:00",
+      "status": "Confirmed",
+      "created_at": "2026-09-01T07:31:40.473Z"
+    },
+    {
+      "booking_id": "B000005",
+      "resource_id": "R005",
+      "availability_id": "A0417",
+      "date": "2026-09-05",
+      "start_time": "09:00",
+      "end_time": "11:00",
+      "status": "Cancelled",
+      "created_at": "2026-09-01T07:48:23.517Z"
+    },
+    {
+      "booking_id": "B000006",
+      "resource_id": "R011",
+      "availability_id": "A0243",
+      "date": "2026-09-03",
+      "start_time": "14:00",
+      "end_time": "16:00",
+      "status": "Cancelled",
+      "created_at": "2026-09-01T07:52:57.794Z"
     }
   ]
 }

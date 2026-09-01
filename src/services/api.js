@@ -98,6 +98,20 @@ export async function getAllBookings() {
   return response.json();
 }
 
+export async function cancelBooking(bookingId) {
+  const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}`, {
+    method: 'DELETE',
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || 'Failed to cancel booking');
+  }
+
+  return data;
+}
+
 export function connectStatusStream(resourceId, onStatusChange) {
   const eventSource = new EventSource(
     `${API_BASE_URL}/resources/${resourceId}/status/stream`

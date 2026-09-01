@@ -15,7 +15,7 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
-import { getAllBookings } from "./services/api.js";
+import { getAllBookings, cancelBooking } from "./services/api.js";
 
 const API_BASE = "http://localhost:3001/api";
 const THEME_KEY = "campusguide-theme";
@@ -58,6 +58,41 @@ export default function Bookings() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
+  const [cancelTarget, setCancelTarget] = useState(null);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [cancelError, setCancelError] = useState("");
+  const [cancelSuccess, setCancelSuccess] = useState(false);
+
+  function openCancelModal(booking) {
+    setCancelTarget(booking);
+    setCancelError("");
+    setCancelSuccess(false);
+  }
+
+  function closeCancelModal() {
+    setCancelTarget(null);
+    setCancelError("");
+    setCancelSuccess(false);
+  }
+
+  async function handleConfirmCancel() {
+    if (!cancelTarget) return;
+    setCancelLoading(true);
+    setCancelError("");
+    try {
+      await cancelBooking(cancelTarget.booking_id);
+      setCancelSuccess(true);
+      const data = await getAllBookings();
+      setBookings(data.bookings || []);
+      setTimeout(() => {
+        closeCancelModal();
+      }, 1500);
+    } catch (err) {
+      setCancelError(err.message || "Failed to cancel booking.");
+    } finally {
+      setCancelLoading(false);
+    }
+  }
 
   useEffect(() => {
     const root = document.documentElement;
@@ -197,12 +232,23 @@ export default function Bookings() {
       </header>
 
       <main className="max-w-4xl mx-auto px-6 md:px-8 py-10">
-        <h1 className="font-display font-semibold text-3xl mb-2">
-          My Bookings
-        </h1>
-        <p className="text-neutral-500 dark:text-neutral-400 text-[15.5px] mb-8">
-          View and manage your resource reservations.
-        </p>
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div>
+            <h1 className="font-display font-semibold text-3xl mb-2">
+              My Bookings
+            </h1>
+            <p className="text-neutral-500 dark:text-neutral-400 text-[15.5px]">
+              View and manage your resource reservations.
+            </p>
+          </div>
+          <button
+            onClick={() => navigate("/bookings/new")}
+            className="shrink-0 px-4 py-2.5 rounded-lg bg-red-500 text-white text-[14px] font-semibold hover:bg-red-600 transition-colors flex items-center gap-1.5"
+          >
+            <span className="text-lg leading-none">+</span>
+            New Booking
+          </button>
+        </div>
 
         <div className="flex items-center gap-2 mb-6">
           {[
@@ -351,16 +397,26 @@ export default function Bookings() {
                     </span>
                   </div>
 
-                  <div className="mt-3 flex items-center gap-2 text-[12px] text-neutral-400 dark:text-neutral-500">
-                    <span>Booking {booking.booking_id}</span>
-                    {booking.created_at && (
-                      <>
-                        <span>·</span>
-                        <span>
-                          Created{" "}
-                          {new Date(booking.created_at).toLocaleDateString()}
-                        </span>
-                      </>
+                  <div className="mt-3 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 text-[12px] text-neutral-400 dark:text-neutral-500">
+                      <span>Booking {booking.booking_id}</span>
+                      {booking.created_at && (
+                        <>
+                          <span>·</span>
+                          <span>
+                            Created{" "}
+                            {new Date(booking.created_at).toLocaleDateString()}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    {!past && (
+                      <button
+                        onClick={() => openCancelModal(booking)}
+                        className="px-3 py-1.5 rounded-lg text-[13px] font-medium border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                      >
+                        Cancel Booking
+                      </button>
                     )}
                   </div>
                 </div>
@@ -369,6 +425,75 @@ export default function Bookings() {
           </div>
         )}
       </main>
+
+      {cancelTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-xl w-full max-w-md p-6">
+            {cancelSuccess ? (
+              <div className="text-center">
+                <div className="w-14 h-14 rounded-full bg-green-100 dark:bg-green-500/10 flex items-center justify-center mx-auto mb-3">
+                  <CheckCircle className="w-7 h-7 text-green-600 dark:text-green-400" />
+                </div>
+                <h3 className="font-display font-semibold text-xl text-neutral-900 dark:text-neutral-50 mb-1">
+                  Booking Cancelled
+                </h3>
+                <p className="text-[14px] text-neutral-500 dark:text-neutral-400">
+                  Your booking has been cancelled.
+                </p>
+              </div>
+            ) : (
+              <>
+                <h3 className="font-display font-semibold text-lg text-neutral-900 dark:text-neutral-50 mb-1">
+                  Cancel Booking
+                </h3>
+                <p className="text-[14px] text-neutral-500 dark:text-neutral-400 mb-5">
+                  Are you sure you want to cancel this booking? This action cannot be undone.
+                </p>
+
+                <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4 mb-5 space-y-2">
+                  <div className="font-semibold text-[15px] text-neutral-900 dark:text-neutral-50">
+                    {cancelTarget.resource_name}
+                  </div>
+                  <div className="text-[13.5px] text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5" />
+                    {formatDisplayDate(cancelTarget.date)}
+                  </div>
+                  <div className="text-[13.5px] text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5" />
+                    {cancelTarget.start_time} – {cancelTarget.end_time}
+                  </div>
+                  <div className="text-[12px] text-neutral-400 dark:text-neutral-500">
+                    Booking ID: {cancelTarget.booking_id}
+                  </div>
+                </div>
+
+                {cancelError && (
+                  <div className="text-[13.5px] text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-800 rounded-lg px-4 py-3 mb-4">
+                    {cancelError}
+                  </div>
+                )}
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={closeCancelModal}
+                    disabled={cancelLoading}
+                    className="px-4 py-2.5 rounded-lg text-[14px] font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                  >
+                    Keep Booking
+                  </button>
+                  <button
+                    onClick={handleConfirmCancel}
+                    disabled={cancelLoading}
+                    className="px-4 py-2.5 rounded-lg text-[14px] font-semibold bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
+                  >
+                    {cancelLoading ? "Cancelling..." : "Yes, Cancel"}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

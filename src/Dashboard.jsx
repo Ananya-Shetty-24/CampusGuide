@@ -16,7 +16,9 @@ import {
   Send,
   Maximize2,
   Minimize2,
+  CalendarPlus,
 } from "lucide-react";
+import { getAllBookings } from "./services/api.js";
 
 const API_BASE = "http://localhost:3001/api";
 const THEME_KEY = "campusguide-theme";
@@ -28,11 +30,31 @@ function getGreeting() {
   return "Good evening";
 }
 
-const UPCOMING_BOOKING = {
-  resource_name: "AI & ML Laboratory",
-  time: "Today · 2:00 PM – 3:00 PM",
-  building: "Innovation Building",
-};
+function formatDisplayDate(dateStr) {
+  const parts = dateStr.split("-").map(Number);
+  const d = new Date(parts[0], parts[1] - 1, parts[2]);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  if (d.getTime() === today.getTime()) return "Today";
+  if (d.getTime() === tomorrow.getTime()) return "Tomorrow";
+  return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+}
+
+function isPast(dateStr, endTime) {
+  const parts = dateStr.split("-").map(Number);
+  const [h, m] = endTime.split(":").map(Number);
+  const end = new Date(parts[0], parts[1] - 1, parts[2], h, m);
+  return end <= new Date();
+}
+
+function formatTime12(time24) {
+  const [h, m] = time24.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 || 12;
+  return `${h12}:${String(m).padStart(2, "0")} ${period}`;
+}
 
 function SearchResultCard({ result, onSelect }) {
   if (result.type === "resource") {
@@ -325,6 +347,36 @@ export default function Dashboard() {
       }
     }
     loadResources();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const [upcomingBookings, setUpcomingBookings] = useState([]);
+  const [upcomingLoading, setUpcomingLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadBookings() {
+      try {
+        const data = await getAllBookings();
+        if (cancelled) return;
+        const all = data.bookings || [];
+        const upcoming = all
+          .filter((b) => !isPast(b.date, b.end_time))
+          .sort((a, b) => {
+            const da = new Date(a.date + "T" + a.start_time);
+            const db = new Date(b.date + "T" + b.start_time);
+            return da - db;
+          });
+        setUpcomingBookings(upcoming);
+      } catch (err) {
+        if (!cancelled) setUpcomingBookings([]);
+      } finally {
+        if (!cancelled) setUpcomingLoading(false);
+      }
+    }
+    loadBookings();
     return () => {
       cancelled = true;
     };
@@ -726,22 +778,78 @@ export default function Dashboard() {
           Upcoming booking
         </h2>
         <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-5 mb-10">
-          <div className="font-semibold text-[15.5px] mb-1">
-            {UPCOMING_BOOKING.resource_name}
-          </div>
-          <div className="text-neutral-500 dark:text-neutral-400 text-[13.5px]">
-            {UPCOMING_BOOKING.time}
-          </div>
-          <div className="text-neutral-500 dark:text-neutral-400 text-[13.5px] mb-4">
-            {UPCOMING_BOOKING.building}
-          </div>
-          <button
-            onClick={() => navigate("/bookings")}
-            className="flex items-center gap-1 text-[13.5px] font-semibold text-red-500 hover:underline"
-          >
-            View booking
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          {upcomingLoading ? (
+            <div className="text-[13.5px] text-neutral-400 dark:text-neutral-500">
+              Loading…
+            </div>
+          ) : upcomingBookings.length === 0 ? (
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-red-50 dark:bg-red-500/10 flex items-center justify-center">
+                  <CalendarPlus className="w-5 h-5 text-red-500" />
+                </div>
+                <div className="font-semibold text-[15.5px] text-neutral-900 dark:text-neutral-50">
+                  No upcoming bookings
+                </div>
+              </div>
+              <p className="text-neutral-500 dark:text-neutral-400 text-[13.5px] mb-4">
+                Book a resource to see it appear here.
+              </p>
+              <button
+                onClick={() => navigate("/bookings/new")}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-500 text-white text-[13.5px] font-semibold hover:bg-red-600 transition-colors"
+              >
+                <CalendarPlus className="w-3.5 h-3.5" />
+                New Booking
+              </button>
+            </div>
+          ) : (() => {
+            const next = upcomingBookings[0];
+            return (
+              <div>
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div className="font-semibold text-[15.5px] text-neutral-900 dark:text-neutral-50">
+                    {next.resource_name}
+                  </div>
+                  <div className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 text-[11px] font-medium">
+                    Upcoming
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 text-[13.5px] mb-1">
+                  <Calendar className="w-3.5 h-3.5" />
+                  {formatDisplayDate(next.date)}
+                  <span className="text-neutral-300 dark:text-neutral-600">·</span>
+                  <span>
+                    {formatTime12(next.start_time)} – {formatTime12(next.end_time)}
+                  </span>
+                </div>
+                {next.building && (
+                  <div className="flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 text-[13.5px] mb-4">
+                    <MapPin className="w-3.5 h-3.5" />
+                    {next.building}
+                    {next.resource_type && (
+                      <>
+                        <span className="text-neutral-300 dark:text-neutral-600">·</span>
+                        <span className="capitalize">{next.resource_type}</span>
+                      </>
+                    )}
+                  </div>
+                )}
+                {upcomingBookings.length > 1 && (
+                  <div className="text-[12px] text-neutral-400 dark:text-neutral-500 mb-3">
+                    +{upcomingBookings.length - 1} more upcoming
+                  </div>
+                )}
+                <button
+                  onClick={() => navigate("/bookings")}
+                  className="flex items-center gap-1 text-[13.5px] font-semibold text-red-500 hover:underline"
+                >
+                  View booking
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            );
+          })()}
         </div>
 
         <h2 className="font-display font-semibold text-lg mb-3">

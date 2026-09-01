@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   createBooking,
+  cancelBooking,
   getBookingsByResourceId,
   getBookingById,
   getAllBookings
@@ -94,6 +95,28 @@ router.get('/bookings/:bookingId', (req, res) => {
   } catch (error) {
     console.error('Booking detail error:', error);
     res.status(500).json({ error: 'Unable to fetch booking.' });
+  }
+});
+
+router.delete('/bookings/:bookingId', (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const result = cancelBooking(bookingId);
+
+    if (result.error === 'not_found') {
+      return res.status(404).json({ error: result.message });
+    }
+    if (result.error === 'already_cancelled') {
+      return res.status(400).json({ error: result.message });
+    }
+    if (result.error === 'past') {
+      return res.status(400).json({ error: result.message });
+    }
+
+    res.json({ message: 'Booking cancelled successfully.', booking: result.booking });
+  } catch (error) {
+    console.error('Booking cancel error:', error);
+    res.status(500).json({ error: 'Unable to cancel booking.' });
   }
 });
 
