@@ -16,6 +16,7 @@ import {
   Send,
   Maximize2,
   Minimize2,
+  BookOpen,
 } from "lucide-react";
 
 const API_BASE = "http://localhost:3001/api";
@@ -537,6 +538,12 @@ export default function Dashboard() {
       icon: Flag,
       active: false,
       onClick: () => console.log("TODO: report flow not built yet"),
+    },
+    {
+    label: "Notes",
+    icon: BookOpen, // import BookOpen from lucide-react at the top
+    active: false,
+    onClick: () => navigate("/notes", { state: { name } }),
     },
   ];
 

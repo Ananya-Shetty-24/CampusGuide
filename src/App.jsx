@@ -5,6 +5,8 @@ import ResourceDetail from "./components/ResourceDetail.jsx";
 import Login from "./Login.jsx";
 import SignUp from "./SignUp.jsx";
 import Dashboard from "./Dashboard";
+import NotesPage from './NotesPage'; 
+
 
 export default function App() {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ export default function App() {
       <Route path="/" element={<CampusGuide />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/resources/:resourceId" element={<ResourceDetail />} />
+      <Route path="/notes" element={<NotesPage />} />
       <Route
         path="/login"
         element={

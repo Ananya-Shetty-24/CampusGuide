@@ -9,6 +9,9 @@ import bookingRoutes from './routes/bookings.js';
 import { loadData } from './data/dataLoader.js';
 import { initBookings } from './services/bookingService.js';
 import genieRoutes from './routes/genie.js';
+import notesRoutes from './routes/notes.js';
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,6 +26,7 @@ app.use('/api', searchRoutes);
 app.use('/api', resourceRoutes);
 app.use('/api', bookingRoutes);
 app.use('/api', genieRoutes);
+app.use('/api', notesRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
