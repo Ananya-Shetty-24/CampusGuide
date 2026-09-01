@@ -1,10 +1,10 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import CampusGuide from "./CampusGuide.jsx";
 import ResourceDetail from "./components/ResourceDetail.jsx";
 import Login from "./Login.jsx";
 import SignUp from "./SignUp.jsx";
+import Dashboard from "./Dashboard";
 
 export default function App() {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<CampusGuide />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/resources/:resourceId" element={<ResourceDetail />} />
       <Route
         path="/login"
