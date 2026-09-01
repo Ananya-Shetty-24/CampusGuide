@@ -478,7 +478,7 @@ export default function Dashboard() {
 
   const quickActions = [
     { icon: Search, label: "Find Resource", onClick: openSpotlight },
-    { icon: Calendar, label: "My Bookings", onClick: () => navigate("/") },
+    { icon: Calendar, label: "My Bookings", onClick: () => navigate("/bookings") },
     { icon: MapPin, label: "Explore Campus", onClick: () => navigate("/") },
   ];
 
@@ -736,7 +736,7 @@ export default function Dashboard() {
             {UPCOMING_BOOKING.building}
           </div>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/bookings")}
             className="flex items-center gap-1 text-[13.5px] font-semibold text-red-500 hover:underline"
           >
             View booking
@@ -752,7 +752,7 @@ export default function Dashboard() {
             ? popularResources.map((r) => (
                 <button
                   key={r.resource_id}
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate(`/resources/${r.resource_id}`)}
                   className="px-4 py-2 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-[13.5px] font-medium text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
                 >
                   {r.resource_name}
